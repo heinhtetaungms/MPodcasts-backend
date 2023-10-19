@@ -1,0 +1,98 @@
+info:
+  name: 'M Podcasts'
+  version: '1.0'
+  description: 'Backend API for M Podcasts'
+
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+jwt:
+  secret: '[a-zA-Z0-9._]^+$Guidelines89797987forAlphabeticalArraNumeralsandOtherSymbo$'
+
+spring:
+  application:
+    name: G4 Backend
+  jpa:
+    show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+  #mail-service
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 'heinhtetag159666@gmail.com'
+    password: 'cduuopaqdtxhkasu'
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  profiles:
+    active: prod
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 513752013899-ihi5gv4l8e6of984h4hljnl6q52a6u9h.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          github:
+            clientId: 7e30b49365b49311d2d1
+            clientSecret: 3bbeb21c02c3d8ca69e2eb865b7dd147c5894ade
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - user:email
+              - read:user
+          facebook:
+            clientId: 1359854274885580
+            clientSecret: ea60322cf64dda9e7ce6c2f8715a4c4a
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - public_profile
+        provider:
+          facebook:
+            authorizationUri: https://www.facebook.com/v12.0/dialog/oauth
+            tokenUri: https://graph.facebook.com/v12.0/oauth/access_token
+            userInfoUri: https://graph.facebook.com/v12.0/me?fields=id,email,name,picture.type(large)
+            userNameAttribute: id
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+g4:
+  openapi:
+    dev-url: 'http://localhost:8080'
+    prod-url: 'https://g4backend.onrender.com'
+app:
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
+    authorizedRedirectUri: 'http://localhost:8888/oauth2/redirect'
+firebase:
+  bucket-name: 'm-podcats.appspot.com'
+  audio-url: 'https://storage.googleapis.com/${firebase.bucket-name}/%s'
+  service-account-path: 'firebase.json'

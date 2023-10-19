@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://dpg-cjsvfm2bgj9c73cnbl2g-a.singapore-postgres.render.com:5432/g4db
+    username: heinhtet
+    password: xwRffQFazHM6flZBR2WyfE3Vqp0vpLQN
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
