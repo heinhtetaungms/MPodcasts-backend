@@ -13,6 +13,7 @@ import org.kyi.solution.constant.SecurityConstant;
 import org.kyi.solution.exception.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -130,8 +131,8 @@ public class UserController extends ExceptionHandling {
         return Files.readAllBytes(Paths.get(FileConstant.USER_FOLDER + userName + FileConstant.FORWARD_SLASH + fileName));
     }
 
-    @GetMapping(value = "/image/profile/{userName}", produces = {IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE})
-    public byte[] getTempProfileImage(@PathVariable("userName") String userName) throws IOException {
+    @GetMapping(value = "/image/profile/{userName}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    public ResponseEntity<byte[]> getTempProfileImage(@PathVariable("userName") String userName) throws IOException {
         URL url = new URL(FileConstant.TEMP_PROFILE_IMAGE_BASE_URL + userName);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (InputStream inputStream = url.openStream()) {
@@ -141,8 +142,13 @@ public class UserController extends ExceptionHandling {
                 baos.write(chunk, 0, byteRead);
             }
         }
-        return baos.toByteArray();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        return new ResponseEntity<>(baos.toByteArray(), headers, HttpStatus.OK);
     }
+
 
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         HttpResponse body = new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message.toUpperCase());

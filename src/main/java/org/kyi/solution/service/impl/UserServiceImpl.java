@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistException, UsernameExistException, MessagingException {
+    public User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistException {
         validateNewUsernameAndEmail(EmailConstant.EMPTY, email);
         User user = new User();
         user.setUserId(generateUserId());
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return RandomStringUtils.randomNumeric(10);
     }
 
-    private User validateNewUsernameAndEmail(String currentUsername, String newEmail) throws UserNotFoundException, UsernameExistException, EmailExistException {
+    private User validateNewUsernameAndEmail(String currentUsername, String newEmail) throws UserNotFoundException, EmailExistException {
         User userByNewEmail = findUserByEmail(newEmail);
 
         if (StringUtils.isNotBlank(currentUsername)) {
@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private void saveProfileImage(User user, MultipartFile profileImage) throws IOException {
         if (profileImage != null) {
-            Path userFolder = Paths.get(FileConstant.USER_FOLDER + user.getUserName()).toAbsolutePath().normalize();
+            Path userFolder = Paths.get(FileConstant.USER_FOLDER + user.getUserName().replace(" ", "")).toAbsolutePath().normalize();
             if (!Files.exists(userFolder)) {
                 Files.createDirectories(userFolder);
                 LOGGER.info(FileConstant.DIRECTORY_CREATED + userFolder);
