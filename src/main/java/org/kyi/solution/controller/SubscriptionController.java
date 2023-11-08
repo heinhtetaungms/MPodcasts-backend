@@ -15,7 +15,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/subscription")
+@RequestMapping("/subscription")
 @AllArgsConstructor
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;

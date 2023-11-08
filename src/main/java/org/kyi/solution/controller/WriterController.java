@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/writer")
+@RequestMapping("/writer")
 public class WriterController {
     private final WriterService writerService;
     private final ImageStorageService imageStorageService;

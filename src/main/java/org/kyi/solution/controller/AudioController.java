@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.nio.channels.Channels;
 
 @RestController
-@RequestMapping("/api/audio")
+@RequestMapping("/audio")
 public class AudioController {
 
     private final PodcastService podcastService;

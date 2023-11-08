@@ -28,6 +28,7 @@ public class User implements Serializable {
     private String userName;
     private String password;
     private String email;
+    @Column(length = 65000)
     private String profileImageUrl;
     private Date lastLoginDate;
     private Date joinDate;

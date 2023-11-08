@@ -28,6 +28,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -36,7 +37,7 @@ import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 @AllArgsConstructor
 public class UserController extends ExceptionHandling {
 
@@ -61,7 +62,8 @@ public class UserController extends ExceptionHandling {
     @PostMapping("/login")
     public ResponseEntity<HttpResponse<User>> login(@RequestBody User user) {
         authenticate(user.getEmail(), user.getPassword());
-        User loginUser = userService.findUserByEmail(user.getEmail());
+        Optional<User> userOptional = userService.findUserByEmail(user.getEmail());
+        User loginUser = userOptional.get();
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
         HttpHeaders jwtHeader = getJwtHeader(userPrincipal);
         User validated = subscriptionService.validate(loginUser);
