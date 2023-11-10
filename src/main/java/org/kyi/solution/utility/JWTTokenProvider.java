@@ -32,7 +32,9 @@ public class JWTTokenProvider {
 
     public String generateJwtToken(UserPrincipal userPrincipal) {
         String [] claims = getClaimsFromUser(userPrincipal);
-        return JWT.create().withIssuer(SecurityConstant.KN_LLC).withAudience(SecurityConstant.KN_ADMINISTRATION)
+        return JWT.create()
+                .withIssuer(SecurityConstant.KYI_LLC)
+                .withAudience(SecurityConstant.KYI_ADMINISTRATION)
                 .withIssuedAt(new Date()).withSubject(userPrincipal.getUser().getEmail())
                 .withArrayClaim(SecurityConstant.AUTHORITIES, claims)
                 .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstant.EXPIRATION_TIME))
@@ -80,7 +82,7 @@ public class JWTTokenProvider {
     private JWTVerifier getJWTVerifier() {
         JWTVerifier verifier;
         Algorithm algorithm = HMAC512(secret);
-        verifier = JWT.require(algorithm).withIssuer(SecurityConstant.KN_LLC).build();
+        verifier = JWT.require(algorithm).withIssuer(SecurityConstant.KYI_LLC).build();
         return verifier;
     }
 

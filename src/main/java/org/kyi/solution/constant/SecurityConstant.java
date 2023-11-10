@@ -5,8 +5,8 @@ public class SecurityConstant {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String JWT_TOKEN_HEADER = "Jwt-Token";
     public static final String TOKEN_CANNOT_BE_VERIFIED = "Token cannot be verified";
-    public static final String KN_LLC = "KN, LLC";
-    public static final String KN_ADMINISTRATION = "KN Podcast";
+    public static final String KYI_LLC = "KYI, LLC";
+    public static final String KYI_ADMINISTRATION = "M Podcasts";
     public static final String AUTHORITIES = "Authorities";
     public static final String FORBIDDEN_MESSAGE = "You need to login to access this page";
     public static final String ACCESS_DENIED_MESSAGE = "You do not have permission to access this page";

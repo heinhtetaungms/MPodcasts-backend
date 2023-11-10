@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.kyi.solution.constant.UserImplConstant.EMAIL_NOT_FOUND;
-import static org.kyi.solution.constant.UserImplConstant.NO_USER_FOUND_BY_EMAIL;
 
 @Component
 @RequiredArgsConstructor
@@ -89,6 +88,20 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     private void update(User user, OAuth2AuthenticationToken oAuth2AuthenticationToken, DefaultOAuth2User principal) {
         Map<String, Object> attributes = principal.getAttributes();
+        OAuth2UserInfo oAuth2User = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId(), principal.getAttributes());
+
+        user.setFirstName(oAuth2User.getFirstName());
+        user.setLastName(oAuth2User.getLastName());
+        user.setUserName(oAuth2User.getName());
+        user.setActive(true);
+        user.setNotLocked(true);
+        user.setRole(Role.ROLE_USER.name());
+        user.setAuthorities(Role.ROLE_USER.getAuthorities());
+        user.setProfileImageUrl(oAuth2User.getPicture());
+        user.setProvider(AuthProvider.valueOfLabel(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId()));
+        user.setProviderId(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
+        userService.save(user);
+
 
         UserPrincipal userPrincipal = UserPrincipal.create(user, attributes);
         Authentication securityAuth = new OAuth2AuthenticationToken(userPrincipal, List.of(new SimpleGrantedAuthority(user.getRole())), oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
@@ -97,7 +110,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     private void register(OAuth2AuthenticationToken oAuth2AuthenticationToken, DefaultOAuth2User principal) {
         Map<String, Object> attributes = principal.getAttributes();
-        OAuth2UserInfo oAuth2User =OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId(), principal.getAttributes());
+        OAuth2UserInfo oAuth2User = OAuth2UserInfoFactory.getOAuth2UserInfo(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId(), principal.getAttributes());
 
         User user = new User();
         user.setUserId(generateUserId());
