@@ -25,7 +25,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/podcast")
 public class PodcastController {
     public static final String POST_DELETED_SUCCESSFULLY = "Podcast deleted successfully.";
     private final PodcastService podcastService;
@@ -44,7 +44,7 @@ public class PodcastController {
         return new ResponseEntity<>(body, httpStatus);
     }
 
-    @PostMapping("/podcast/add")
+    @PostMapping("/add")
     public ResponseEntity<HttpResponse<Podcast>> register(@RequestParam("file") MultipartFile file,
                                                           @RequestParam("image") MultipartFile image,
                                                           @ModelAttribute PodcastDTO podcastDTO) throws IOException {
@@ -67,35 +67,35 @@ public class PodcastController {
         return createResponse(newPodcast, OK);
     }
 
-    @GetMapping("/podcast/favourite")
+    @GetMapping("/favourite")
     public ResponseEntity<HttpResponse<List<Podcast>>> favourite(@RequestParam("userId") long userId) {
 
         List<Podcast> podcasts = podcastService.favouritePodcasts(userId);
         return createResponse(podcasts, OK);
     }
 
-    @GetMapping("/podcast/playList")
+    @GetMapping("/playList")
     public ResponseEntity<HttpResponse<List<Podcast>>> playList(@RequestParam("userId") long userId) {
 
         List<Podcast> podcasts = podcastService.podcastPlayListByUser(userId);
         return createResponse(PodcastFactory.ago(podcasts), OK);
     }
 
-    @GetMapping("/podcast/likeCount")
+    @GetMapping("/likeCount")
     public ResponseEntity<HttpResponse<List<Podcast>>> findPodcastsOrderByLikeCountDesc() {
 
         List<Podcast> podcasts = podcastService.findPodcastsOrderByLikeCountDesc();
         return createResponse(PodcastFactory.ago(podcasts), OK);
     }
 
-    @GetMapping("/podcast/viewCount")
+    @GetMapping("/viewCount")
     public ResponseEntity<HttpResponse<List<Podcast>>> findPodcastsOrderByViewCountDesc() {
 
         List<Podcast> podcasts = podcastService.findPodcastsOrderByViewCountDesc();
         return createResponse(PodcastFactory.ago(podcasts), OK);
     }
 
-    @GetMapping("/podcast/latest")
+    @GetMapping("/latest")
     public ResponseEntity<HttpResponse<List<PodcastDTO>>> getLatestPodCasts() {
 
         List<Podcast> podcasts = podcastService.findAllPodcastsOrderedByCreatedAtDesc();
@@ -103,14 +103,14 @@ public class PodcastController {
         return createResponse(PodcastFactory.concatAgo(results), OK);
     }
 
-    @GetMapping("/podcast/list")
+    @GetMapping("/list")
     public ResponseEntity<HttpResponse<List<Podcast>>> getAllPosts() {
 
         List<Podcast> podcasts = podcastService.findAll();
         return createResponse(PodcastFactory.ago(podcasts), OK);
     }
 
-    @GetMapping("/channel/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<HttpResponse<UserDTO>> myChannel(@PathVariable("id") long userId) {
 
         List<Podcast> podcasts = podcastService.findPodcastsByUserId(userId);
@@ -119,7 +119,7 @@ public class PodcastController {
         return createResponse(userDTO, OK);
     }
 
-    @DeleteMapping("/podcast/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAnyAuthority('creator:delete')")
     public ResponseEntity<HttpResponse> deletePost(@PathVariable("id") long id) {
 
@@ -127,7 +127,7 @@ public class PodcastController {
         return response(NO_CONTENT, POST_DELETED_SUCCESSFULLY);
     }
 
-    @PostMapping("/podcast/like")
+    @PostMapping("/like")
     public ResponseEntity<HttpResponse<Podcast>> like(@RequestBody PodcastInteractionDTO podcastDTO) {
 
         Podcast podcast = podcastService.likePodcast(podcastDTO.getPodcastId(), podcastDTO.getUserId(), podcastDTO.isLiked());

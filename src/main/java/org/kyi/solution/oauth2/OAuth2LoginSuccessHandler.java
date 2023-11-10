@@ -9,6 +9,7 @@ import org.kyi.solution.configuration.UserPrincipal;
 import org.kyi.solution.constant.SecurityConstant;
 import org.kyi.solution.enumeration.AuthProvider;
 import org.kyi.solution.enumeration.Role;
+import org.kyi.solution.exception.domain.EmailNotFoundException;
 import org.kyi.solution.model.User;
 import org.kyi.solution.oauth2.user.OAuth2UserInfo;
 import org.kyi.solution.oauth2.user.OAuth2UserInfoFactory;
@@ -27,6 +28,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static org.kyi.solution.constant.UserImplConstant.EMAIL_NOT_FOUND;
+import static org.kyi.solution.constant.UserImplConstant.NO_USER_FOUND_BY_EMAIL;
 
 @Component
 @RequiredArgsConstructor
@@ -47,10 +51,11 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         // Generate JWT token
         UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String jwtToken = jwtTokenProvider.generateJwtToken(userPrincipal);
-        response.setHeader(SecurityConstant.JWT_TOKEN_HEADER, jwtToken);
+
+        String redirectWithToken = redirectUrl + "?accessToken=" + jwtToken;
 
         this.setAlwaysUseDefaultTargetUrl(true);
-        this.setDefaultTargetUrl(redirectUrl);
+        this.setDefaultTargetUrl(redirectWithToken);
         super.onAuthenticationSuccess(request, response, authentication);
     }
 
@@ -62,14 +67,24 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
         DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = principal.getAttributes();
-        String email = attributes.getOrDefault("email", "").toString();
 
-        userService.findUserByEmail(email)
-                .ifPresentOrElse(user -> {
-                    update(user, oAuth2AuthenticationToken, principal);
-                }, () -> {
-                    register(oAuth2AuthenticationToken, principal);
-                });
+        //TODO fix email null case
+        String email = attributes.get("email") == null ? null : attributes.get("email").toString();
+
+        try {
+            if (email == null) {
+                throw new EmailNotFoundException(EMAIL_NOT_FOUND);
+            }
+            userService.findUserByEmail(email)
+                    .ifPresentOrElse(user -> {
+                        update(user, oAuth2AuthenticationToken, principal);
+                    }, () -> {
+                        register(oAuth2AuthenticationToken, principal);
+                    });
+
+        } catch (EmailNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void update(User user, OAuth2AuthenticationToken oAuth2AuthenticationToken, DefaultOAuth2User principal) {

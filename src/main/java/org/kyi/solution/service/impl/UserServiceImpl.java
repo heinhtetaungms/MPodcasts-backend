@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private String getTemporaryProfileImageUrl(String username) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path(FileConstant.DEFAULT_USER_IMAGE_PATH + username).toUriString();
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(FileConstant.DEFAULT_USER_IMAGE_PATH + username.replaceAll("\\s", "")).toUriString();
     }
 
     private String encodePassword(String password) {
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private User validateNewUsernameAndEmail(String currentUsername, String newEmail) throws UserNotFoundException, EmailExistException {
         Optional<User> optionalUser = findUserByEmail(newEmail);
-        User userByNewEmail = optionalUser.get();
+        User userByNewEmail = optionalUser.orElse(null);
 
         if (StringUtils.isNotBlank(currentUsername)) {
             User currentUser = findUserByUsername(currentUsername);

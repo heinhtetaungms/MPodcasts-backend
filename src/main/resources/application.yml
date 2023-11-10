@@ -89,4 +89,4 @@ firebase:
   service-account-path: 'firebase.json'
 frontend:
   url: 'http://localhost:8888'
-  redirect_url: '${frontend.url}/oauth2/redirect'
+  redirect_url: '${frontend.url}/oauth2'

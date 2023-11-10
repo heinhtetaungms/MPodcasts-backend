@@ -50,6 +50,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             }catch (JWTVerificationException exception){
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, SecurityConstant.TOKEN_CANNOT_BE_VERIFIED);
+                throw new JWTVerificationException(SecurityConstant.TOKEN_CANNOT_BE_VERIFIED);
             }
 
         }

@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,8 +32,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
@@ -58,6 +59,18 @@ public class UserController extends ExceptionHandling {
         HttpResponse<T> body = new HttpResponse<>(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), data);
         return new ResponseEntity<>(body, headers, httpStatus);
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<HttpResponse<User>> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Optional<User> userOptional = userService.findUserByEmail(authentication.getName());
+            User loginUser = userOptional.get();
+            return createResponse(loginUser, OK);
+        }
+        return createResponse(null, UNAUTHORIZED);
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<HttpResponse<User>> login(@RequestBody User user) {

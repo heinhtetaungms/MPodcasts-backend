@@ -54,8 +54,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers(SecurityConstant.PUBLIC_URLS)
-                        .permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests(request -> request.requestMatchers(SecurityConstant.PUBLIC_URLS).permitAll()
+                        .anyRequest().authenticated())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .oauth2Login(oauth2 -> {
                     oauth2.successHandler(oAuth2LoginSuccessHandler);
@@ -64,7 +64,7 @@ public class SecurityConfiguration {
                 .exceptionHandling(exception -> exception.accessDeniedHandler(jwtAccessDeniedHandler).authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .authenticationProvider(authenticationProvider())
                 .logout(logout -> logout
-                        .logoutUrl("/api/logout")
+                        .logoutUrl("/logout")
                         .logoutSuccessHandler(logoutSuccessHandler())
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
