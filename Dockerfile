@@ -11,6 +11,5 @@ RUN mvn clean package -DskipTests
 # Package stage
 #
 FROM openjdk:17-jdk-alpine
-COPY --from=build /target/g4-backend-0.0.1-SNAPSHOT.jar backend.jar
-EXPOSE 8081
-ENTRYPOINT ["java","-jar","backend.jar"]
+COPY --from=build /target/MPodcasts-backend-0.0.1-SNAPSHOT.jar MPodcasts.jar
+ENTRYPOINT ["java","-jar","MPodcasts.jar"]
