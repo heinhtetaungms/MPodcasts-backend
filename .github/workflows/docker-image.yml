@@ -34,10 +34,10 @@ jobs:
 
     - name: Build and tag Docker image
       run: |
-        docker build . -t heinhtetaungms/MPodcasts
+        docker build . -t heinhtetaungms/m_podcasts
       env:
         DOCKER_BUILDKIT: 1
 
     - name: Push Docker image
       run: |
-        docker push heinhtetaungms/MPodcasts
+        docker push heinhtetaungms/m_podcasts
