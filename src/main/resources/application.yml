@@ -10,6 +10,12 @@ server:
     path: /error
   servlet:
     context-path: /api/v1
+  tomcat:
+    use-relative-redirects: true
+    protocol-header: x-forwarded-proto
+    remote-ip-header: x-forwarded-for
+  forward-headers-strategy: framework
+
 jwt:
   secret: '[a-zA-Z0-9._]^+$Guidelines89797987forAlphabeticalArraNumeralsandOtherSymbo$'
 
