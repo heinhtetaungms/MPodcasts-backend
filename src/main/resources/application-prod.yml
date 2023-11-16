@@ -10,3 +10,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+frontend:
+  url: 'https://mpodcasts.netlify.app'
+  redirect_url: '${frontend.url}/oauth2'

@@ -10,3 +10,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.SQLServer2008Dialect
+
+frontend:
+  url: 'http://localhost:8888'
+  redirect_url: '${frontend.url}/oauth2'

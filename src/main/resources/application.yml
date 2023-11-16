@@ -87,11 +87,8 @@ management:
 g4:
   openapi:
     dev-url: 'http://localhost:8080'
-    prod-url: 'https://g4backend.onrender.com'
+    prod-url: 'https://mpodcasts.up.railway.app'
 firebase:
   bucket-name: 'm-podcats.appspot.com'
   audio-url: 'https://storage.googleapis.com/${firebase.bucket-name}/%s'
   service-account-path: 'firebase.json'
-frontend:
-  url: 'http://localhost:8888'
-  redirect_url: '${frontend.url}/oauth2'
